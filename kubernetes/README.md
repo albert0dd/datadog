@@ -29,36 +29,59 @@ kubectl create secret generic datadog-keys -n datadog --from-literal=api-key=<AP
 Create the `values.yaml` file.
 
 ```yaml
+# datadog-values.yaml
+# Archivo de valores de Helm actualizado para desplegar el agente de Datadog en Kubernetes (Linux only)
+
+## Clave API (requerida)
 datadog:
-  clusterName: <CLUSTER-NAME>
-  apiKeyExistingSecret: datadog-keys
-  apm:
-    portEnabled: true
+  apiKeyExistingSecret: datadog-secret
+  site: datadoghq.eu  # Cambia según tu región
+  clusterName: my-k8s-cluster  # Cambia según tu entorno
+
+  ## Etiquetas unificadas (recomendadas)
+  tags:
+    - env:production
+    - team:infra
+    - service:k8s-monitoring
+
+  ## Logs (opcional)
   logs:
     enabled: true
     containerCollectAll: true
+
+  ## APM (opcional)
+  apm:
+    portEnabled: false  # true si quieres abrir puerto 8126 para traces
+
+  ## Live Containers / Orchestrator Explorer
   processAgent:
-    processCollection: true
-  dogstatsd:
-    useHostPort: true
+    enabled: true
+  orchestratorExplorer:
+    enabled: true
+
+  ## Autodiscovery y Cluster Checks
+  clusterChecksEnabled: true
   kubeStateMetricsCore:
     enabled: true
-  kubeStateMetricsEnabled: false
-  kubelet:
-    tlsVerify: false
-  networkMonitoring:
-    enabled: true
-  securityAgent:
-    compliance:
-      enabled: true
-    runtime:
-      enabled: true
-      syscallMonitor:
-        enabled: true
+
+## Cluster Agent (recomendado)
+clusterAgent:
+  enabled: true
+
+
+## Recursos opcionales (ajustables)
 agents:
-  # This toleration allows the agent to be deployed to every node.
   tolerations:
-    - operator: Exists
+    - key: "node-role.kubernetes.io/master"
+      operator: "Exists"
+      effect: "NoSchedule"
+  resources:
+    limits:
+      memory: 512Mi
+    requests:
+      cpu: 200m
+      memory: 256Mi
+
 ```
 
 All yaml snippets presented from here are expected to be **propertly merged** into the main `values.yaml`.
