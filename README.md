@@ -6,18 +6,6 @@
 
 ### [Windows](windows.md)
 
-## Labs
-
-### [Python application](https://github.com/yafernandes/app-python)
-
-### [Kafka client](https://github.com/yafernandes/kafka-client)
-
-### [Java instrumented logs](https://github.com/yafernandes/instrumented-logs)
-
-### [Tags-Tags-Tags](https://github.com/yafernandes/tags-tags-tags)
-
-### [Transparent Proxy](https://github.com/yafernandes/transparent-proxy)
-
 ## Information Scrubbing
 
 [Logs](https://docs.datadoghq.com/agent/logs/advanced_log_collection/?tab=exclude_at_match#scrub-sensitive-data-from-your-logs)
